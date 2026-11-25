@@ -1,0 +1,41 @@
+#include <iostream>
+using namespace std;
+int main(){
+	int n, window, i, lost, ack;
+	cout<<"----------SELECTIVE REPEAT ARQ----------"<<endl;
+	cout<<"Enter total no of frames: ";
+	cin>>n;
+	cout<<"Enter sliding window size: ";
+	cin>>window;
+	i=1;
+	while(i<=n){
+		int end = i+window-1;
+		if(end>n){
+			end=n;
+		}
+		cout<<"Sender transmitting frames from "<<i<<" to "<<end<<endl;
+		cout<<"Enter lost frame no (0 if none): ";
+		cin>>lost;
+		if(lost>=i && lost<=end){
+			cout<<"Frame "<<lost<<" lost!"<<endl;
+			cout<<"Other frames received and buffered..."<<endl;
+			
+			do{
+				cout<<"retransmit frame "<<lost<<endl;
+				cout<<"Enter 1 if frame "<<lost <<" received successfully! ";
+				cin>>ack;
+				
+			}while(ack != 1);
+			cout<<"\nframe "<<lost<<" retransmmited successsfully\n"<<endl;
+		}
+		else{
+			cout<<"All frames transmmited successfully!"<<endl;
+				
+		}
+		i=end+1;
+	}
+	cout << "\nTransmission completed!\n";
+
+	return 0;
+	
+}

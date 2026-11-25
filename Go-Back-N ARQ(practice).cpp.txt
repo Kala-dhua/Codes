@@ -1,0 +1,153 @@
+#include <iostream>
+//using namespace std;
+//int main(){
+//	int n, window, i, lost;
+//	cout<<"-------Go Back N ARQ--------"<<endl;
+//	cout<<"Enter total number of frames: ";
+//	cin>>n;
+//	cout<<"Enter total no of window size: ";
+//	cin>>n;
+//	cout<<"starting transmission......."<<endl;
+//	i=1;
+//	while(i<=n){
+//		int end = i+window-1;
+//		if(end>n){
+//			end=n;
+//		}
+//		cout<<"Transmitting frames from "<<i<<"to"<<end<<endl;
+//		cout<<"Enter frame lost(0 if none): "<<endl;
+//		cin>>lost;
+//		if(lost >=i && lost<=end){
+//			cout<<"retransmit frame from "<<lost<<"to"<<end;
+//			i=lost;
+//		}
+//		else{
+//			cout<<"frames transmit successfully from "<<i<<"to"<<end;
+//			i=end+1;
+//		}
+//	}
+//	cout<<"All frames are transmitted successfully!";
+//	return 0;
+//}
+//=========================================Chatgpt===============================
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int n, window, i, lost;
+
+    cout << "=== GO-BACK-N ARQ ===\n";
+
+    cout << "Enter total number of frames: ";
+    cin >> n;
+
+    cout << "Enter window size: ";
+    cin >> window;
+
+    cout << "\nStarting transmission...\n";
+
+    i = 1;
+
+    while (i <= n)
+    {
+        int end = i + window - 1;
+
+        if (end > n)
+            end = n;
+
+        cout << "\nSending frames " << i << " to " << end << "\n";
+
+        cout << "Enter frame number lost (0 if none): ";
+        cin >> lost;
+
+        if (lost >= i && lost <= end)
+        {
+            cout << "\nFrame " << lost << " lost!\n";
+
+            cout << "Receiver discards subsequent out-of-order frames.\n";
+
+            cout << "Go back and retransmit from Frame " << lost << "\n";
+
+            i = lost;
+        }
+        else
+        {
+            cout << "All frames acknowledged successfully.\n";
+
+            i = end + 1;
+        }
+    }
+
+    cout << "\nTransmission completed successfully!\n";
+
+    return 0;
+}
+//============================ SELECTIVE REPEAT ARQ ========================
+
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int n, window, i, lost, ack;
+
+    cout << "=== SELECTIVE REPEAT ARQ ===\n";
+
+    cout << "Enter total number of frames: ";
+    cin >> n;
+
+    cout << "Enter window size: ";
+    cin >> window;
+
+    i = 1;
+
+    while (i <= n)
+    {
+        int end = i + window - 1;
+
+        if (end > n)
+        {
+            end = n;
+        }
+
+        cout << "\nSending frames " << i << " to " << end << endl;
+
+        cout << "Enter lost frame number (0 if none): ";
+        cin >> lost;
+
+        if (lost >= i && lost <= end)
+        {
+            cout << "\nFrame " << lost << " is lost!\n";
+
+            cout << "Other frames are received and buffered.\n";
+
+            do
+            {
+                cout << "Retransmitting only Frame " << lost << endl;
+
+                cout << "Enter 1 if Frame " << lost
+                     << " is received correctly: ";
+
+                cin >> ack;
+
+            } while (ack != 1);
+
+            cout << "Frame " << lost
+                 << " retransmitted successfully.\n";
+        }
+        else
+        {
+            cout << "All frames received successfully.\n";
+        }
+
+        i = end + 1;
+    }
+
+    cout << "\nTransmission completed!\n";
+
+    return 0;
+}
+

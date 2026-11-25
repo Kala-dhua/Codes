@@ -1,0 +1,64 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+void xor_op(char *data, char *gen){
+	int glen = strlen(gen);
+	int dlen = strlen(data)-glen+1;
+	for(int i=0; i<dlen; i++){
+		if(data[i]=='1'){
+			for(int j=0; j<glen; j++){
+				data[i+j] = (data[i+j]==gen[j]) ? '0' : '1';
+			}
+		}
+	}
+}
+int main(){
+	
+	char msg[64], frame[128], gen[16], rem[128];
+	 
+	cout<<"Enter msg bit: ";
+	cin>>msg;
+	
+	cout<<"Enter gen bit: ";
+	cin>>gen;
+	
+	int mlen = strlen(msg);
+	int glen = strlen(gen);
+	
+	strcpy(frame, msg);
+	
+	for(int i=0; i<glen-1; i++){
+		frame[mlen+i] ='0';
+	}
+	frame[mlen+glen-1]='\0';
+	
+	strcpy(rem, frame);
+	xor_op(rem, gen);
+	
+	for(int i=0; i<glen-1; i++){
+		frame[mlen+i]=rem[mlen+i];
+	}
+	
+	cout<<"Transmitted frame: "<<frame<<endl;
+	
+	cout<<"Enter received frame: ";
+	cin>>rem;
+	
+	xor_op(rem, gen);
+	int error= 0;
+	
+	for(int i=0; i<strlen(rem); i++){
+		if(rem[i]=='1'){
+			error = 1;
+		}
+	}
+	if(error ==1){
+		cout<<"error detected! "<<endl;
+	}
+	else{
+		cout<<"error not detected! "<<endl;
+	}
+	return 0;
+	
+}

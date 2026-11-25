@@ -1,0 +1,82 @@
+//#include <iostream>
+//#include <cstdlib>
+//#include <ctime>
+//#define TOTAL_FRAMES 10
+//using namespace std;
+//
+////#define TOTAL_FRAMES 10
+//
+//int main() {
+//    int frame = 0;
+//    int seq_num = 0;
+//
+//    srand(time(NULL));
+//
+//    cout << "--- Stop and Wait ARQ Simulation ---\n\n";
+//
+//    while (frame < TOTAL_FRAMES) {
+//
+//        cout << "[Sender]   Sending Frame " << frame + 1
+//             << " (Seq No: " << seq_num << ")\n";
+//
+//        // Simulate network loss: 30% chance
+//        int network_event = rand() % 10;
+//
+//        if (network_event < 3) {
+//            // Frame lost or ACK lost
+//            cout << "[Network]  Packet lost / Timeout expired!\n";
+//            cout << "[Sender]   Retransmitting Frame "
+//                 << frame + 1 << "...\n\n";
+//        }
+//        else {
+//            // Successful transmission and ACK received
+//            cout << "[Receiver] Frame " << frame + 1
+//                 << " received correctly. Sending ACK "
+//                 << 1 - seq_num << "\n";
+//
+//            cout << "[Sender]   ACK " << 1 - seq_num
+//                 << " received successfully.\n\n";
+//
+//            seq_num = 1 - seq_num;  // Toggle sequence number
+//            frame++;                // Move to next frame
+//        }
+//    }
+//
+//    cout << "All " << TOTAL_FRAMES
+//         << " frames sent and acknowledged successfully.\n";
+//
+//    return 0;
+//}
+
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define frames 10
+
+int main(){
+	int frame = 0;
+	int seq_no = 0;
+	srand(time(NULL));
+	
+	cout<<"--------------Stop and Wait Simulator----------"<<endl;
+	
+	while(frame < frames){
+		cout<<"[Sender] sending frame "<<frame<<" , "<<"sequence no : "<<seq_no;
+		int network_event = rand() % 10;
+		if(network_event < 3){
+			cout<<"\n\n[Network] : Frame lost/Timeout expired..."<<endl;
+			cout<<"sender retransmitting frame "<<frame<<endl;
+		}
+		else{
+			cout<<"\n\n[Receiver] received frame succesfully and sending ack "<<1-seq_no<<"...."<<endl;
+			cout<<"[sender] received ack "<<1-seq_no<<" successfully!"<<endl;
+			frame++;
+			seq_no = 1-seq_no;
+		}
+		
+	}
+	cout<<"All frames sent and acknowledge successfully!"<<endl;
+	return 0;
+}
+
