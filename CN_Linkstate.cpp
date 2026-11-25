@@ -1,0 +1,49 @@
+#include <stdio.h>
+
+#define INF 999
+#define N 4  // Number of routers/nodes
+
+void dijkstra(int cost[N][N], int src) {
+    int dist[N], visited[N] = {0}, count, min, next_node;
+
+    for (int i = 0; i < N; i++)
+        dist[i] = cost[src][i];
+
+    visited[src] = 1;
+    dist[src] = 0;
+
+    for (count = 1; count < N - 1; count++) {
+        min = INF;
+        for (int i = 0; i < N; i++) {
+            if (dist[i] < min && !visited[i]) {
+                min = dist[i];
+                next_node = i;
+            }
+        }
+
+        visited[next_node] = 1;
+
+        for (int i = 0; i < N; i++) {
+            if (!visited[i] && (min + cost[next_node][i] < dist[i]))
+                dist[i] = min + cost[next_node][i];
+        }
+    }
+
+    printf("Routing table for Router %d:\nDestination\tCost\n", src);
+    for (int i = 0; i < N; i++)
+        printf("%d\t\t%d\n", i, dist[i]);
+}
+
+int main() {
+    // Adjacency matrix: cost[i][j] is the link cost from i to j
+    int cost[N][N] = {
+        {0,   3,   INF, 7},
+        {3,   0,   1,   INF},
+        {INF, 1,   0,   2},
+        {7,   INF, 2,   0}
+    };
+
+    dijkstra(cost, 0); // Compute routes starting from Router 0
+    return 0;
+}
+
