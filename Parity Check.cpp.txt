@@ -1,0 +1,127 @@
+//Write a program to detect and correct single bit error using  Parity Check 
+#include <iostream>
+using namespace std;
+
+#define ROWS 4
+#define COLS 4
+
+int main()
+{
+    int data[ROWS + 1][COLS + 1] = {0};
+    int rx[ROWS + 1][COLS + 1] = {0};
+
+    cout << "Enter 4x4 binary data bits (row by row):" << endl;
+
+    for (int r = 0; r < ROWS; r++)  
+    {
+        for (int c = 0; c < COLS; c++)
+        {
+            cin >> data[r][c];
+
+            data[r][COLS] ^= data[r][c];
+
+            data[ROWS][c] ^= data[r][c];
+        }
+
+        data[ROWS][COLS] ^= data[r][COLS];
+    }
+
+    cout << "\n--- Transmitted Matrix (with Parity Row & Col) ---"
+         << endl;
+
+    for (int r = 0; r <= ROWS; r++)
+    {
+        for (int c = 0; c <= COLS; c++)
+        {
+            cout << data[r][c] << " ";
+        }
+
+        cout << endl;
+    }
+
+
+    cout << "\nEnter 5x5 received matrix (separated by spaces):"
+         << endl;
+
+    for (int r = 0; r <= ROWS; r++)
+    {
+        for (int c = 0; c <= COLS; c++)
+        {
+            cin >> rx[r][c];
+        }
+    }
+
+    int err_row = -1;
+    int err_col = -1;
+
+    // Check Row Parity
+    for (int r = 0; r <= ROWS; r++)
+    {
+        int r_parity = 0;
+
+        for (int c = 0; c <= COLS; c++)
+        {
+            r_parity ^= rx[r][c];
+        }
+
+        if (r_parity != 0)
+        {
+            err_row = r;
+        }
+    }
+
+    // Check Column Parity
+    for (int c = 0; c <= COLS; c++)
+    {
+        int c_parity = 0;
+
+        for (int r = 0; r <= ROWS; r++)
+        {
+            c_parity ^= rx[r][c];
+        }
+
+        if (c_parity != 0)
+        {
+            err_col = c;
+        }
+    }
+
+    // 4. Detection and Correction
+    if (err_row == -1 && err_col == -1)
+    {
+        cout << "\nStatus: No error detected. Matrix is valid."
+             << endl;
+    }
+    else if (err_row != -1 && err_col != -1)
+    {
+        cout << "\nStatus: Single-bit error detected at Row "
+             << err_row + 1
+             << ", Col "
+             << err_col + 1
+             << "!" << endl;
+
+        // Flip the incorrect bit
+        rx[err_row][err_col] ^= 1;
+
+        cout << "\n--- Corrected Matrix ---" << endl;
+
+        for (int r = 0; r <= ROWS; r++)
+        {
+            for (int c = 0; c <= COLS; c++)
+            {
+                cout << rx[r][c] << " ";
+            }
+
+            cout << endl;
+        }
+    }
+    else
+    {
+        cout << "\nStatus: Multiple errors detected (cannot correct)."
+             << endl;
+    }
+
+    return 0;
+}
+
+

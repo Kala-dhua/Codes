@@ -1,0 +1,92 @@
+ #include <iostream>
+#include <cstdint>
+using namespace std;
+// Function to print IP address
+void print_ip(uint32_t ip) {
+    cout << ((ip >> 24) & 0xFF) << "."
+         << ((ip >> 16) & 0xFF) << "."
+         << ((ip >> 8) & 0xFF) << "."
+         << (ip & 0xFF);
+}
+int main() {
+
+    unsigned int a, b, c, d;
+    unsigned int base_cidr, num_subnets;
+
+    cout << "Enter base network (e.g. 192.168.1.0/24) "
+         << "and number of subnets: ";
+
+    char slash;
+
+    cin >> a;
+    cin.ignore(); // Ignore dot
+    cin >> b;
+    cin.ignore();
+    cin >> c;
+    cin.ignore();
+    cin >> d;
+    cin >> slash >> base_cidr >> num_subnets;
+
+    // Validate input
+    if (a > 255 || b > 255 || c > 255 || d > 255 ||
+        slash != '/' || base_cidr > 30 ||
+        num_subnets == 0) {
+
+        cout << "Invalid input!";
+        return 1;
+    }
+
+    // Step 1: Calculate borrowed bits
+    int borrow = 0;
+
+    while ((1U << borrow) < num_subnets) {
+        borrow++;
+    }
+
+    // Step 2: Calculate new CIDR
+    int new_cidr = base_cidr + borrow;
+
+    if (new_cidr > 30) {
+        cout << "Too many subnets requested!";
+        return 1;
+    }
+
+    // Step 3: Convert IP into 32-bit number
+    uint32_t base_ip =
+        (a << 24) | (b << 16) | (c << 8) | d;
+
+    // Step 4: Calculate subnet mask
+    uint32_t mask = ~0U << (32 - new_cidr);
+
+    // Step 5: Calculate block size
+    uint32_t block_size = 1U << (32 - new_cidr);
+
+    cout << "\nNew Subnet Mask: ";
+    print_ip(mask);
+
+    cout << " (/" << new_cidr << ")\n\n";
+
+    // Step 6: Generate subnets
+    for (unsigned int i = 0; i < num_subnets; i++) {
+
+        uint32_t net = base_ip + (i * block_size);
+        
+        uint32_t bcast = net + block_size - 1;
+
+        cout << "--- Subnet " << i + 1 << " ---\n";
+
+        cout << "Network ID: ";
+        print_ip(net);
+
+        cout << "\nHost Address Range: ";
+        print_ip(net + 1);
+        cout << " - ";
+        print_ip(bcast - 1);
+
+        cout << "\nBroadcast: ";
+        print_ip(bcast);
+
+        cout << "\n\n";
+    }
+    return 0;
+}
